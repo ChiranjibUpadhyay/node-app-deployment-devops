@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDS = credentials('dockerhub-creds')
+        DOCKER_IMAGE = "todo-app:latest"
+    }
+
+    stages {
+
+        stage('Build the docker image for app') {
+            steps {
+                sh '''
+                docker build -t $DOCKER_CREDS_USR/$DOCKER_IMAGE ./app
+                '''
+            }
+        }
+
+        stage('Login to DockerHub and Push the app image') {
+            steps {
+                sh '''
+                echo "$DOCKER_CREDS_PSW" | docker login -u "$DOCKER_CREDS_USR" --password-stdin
+
+                docker push $DOCKER_CREDS_USR/$DOCKER_IMAGE
+                '''
+            }
+        }
+
+        stage('Deploy the app using ansible') {
+            steps {
+                sh '''
+                echo "Deploying image: $DOCKER_CREDS_USR/$DOCKER_IMAGE"
+                ansible-playbook -i ansible/inventory.ini ansible/deploy.yml \
+                --extra-vars "docker_user=$DOCKER_CREDS_USR"
+                '''
+            }
+        }
+    }
+}

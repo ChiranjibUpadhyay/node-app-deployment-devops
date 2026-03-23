@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  app:
+    image: chiranjib29/todo-app:latest
+    ports:
+      - "9090:9090"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

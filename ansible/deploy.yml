@@ -1,0 +1,18 @@
+- hosts: app
+  become: true
+
+  tasks:
+
+    - name: Install Docker
+      script: ../scripts/install_docker.sh
+
+    - name: Copy docker-compose file
+      copy:
+        src: ../app/docker-compose.yml
+        dest: /home/ubuntu/docker-compose.yml
+
+    - name: Pull latest Docker image
+      command: docker pull {{ docker_user }}/todo-app:latest
+
+    - name: Run docker compose
+      command: docker-compose up -d
