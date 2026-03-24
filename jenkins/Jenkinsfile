@@ -8,6 +8,12 @@ pipeline {
 
     stages {
 
+        stage('Cleanup') {
+            steps {
+                cleanWs() // This deletes everything in the current workspace
+            }
+        }
+
         stage('Build the docker image for app') {
             steps {
                 sh '''
