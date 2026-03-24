@@ -30,7 +30,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Deploying image: $DOCKER_CREDS_USR/$DOCKER_IMAGE"
-                ansible-playbook -i ansible/inventory.ini ansible/deploy.yml \
+                ansible-playbook -i ansible/inventory.yml ansible/deploy.yml \
                 --extra-vars "docker_user=$DOCKER_CREDS_USR"
                 '''
             }
