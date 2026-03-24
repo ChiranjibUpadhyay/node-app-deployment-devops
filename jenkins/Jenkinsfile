@@ -6,11 +6,16 @@ pipeline {
         DOCKER_IMAGE = "todo-app:latest"
     }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
-        stage('Cleanup') {
+        stage('Cleanup and Checkout') {
             steps {
                 cleanWs() // This deletes everything in the current workspace
+                checkout scm
             }
         }
 
